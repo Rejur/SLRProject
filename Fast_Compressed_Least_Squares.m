@@ -1,4 +1,4 @@
-function [M, time] = Fast_Compressed_Least_Squares(X, f, cu, cv, alpha, beta, gamma)
+function [M, time] = Fast_Compressed_Least_Squares(X, f, cu, cv, B)
     %%Fast Compressed Least-Squares.
     %%Get M.
 
@@ -23,9 +23,9 @@ function [M, time] = Fast_Compressed_Least_Squares(X, f, cu, cv, alpha, beta, ga
         Ail = [zero3', f * X_i_l', (cv - x_ip1_l(2)) * X_i_l', 0, f, (cv - x_ip1_l(2)), 0;
             -f * X_i_l', zero3', (x_ip1_l(1) - cu) * X_i_l', -f, 0, (x_ip1_l(1) - cu), 0;
             f * x_ip1_l(2) * X_i_l', -f * x_ip1_l(1) * X_i_l', (cu * x_ip1_l(2) - cv * x_ip1_l(1)) * X_i_l', f * x_ip1_l(2), -f * x_ip1_l(1), (cu * x_ip1_l(2) - cv * x_ip1_l(1)), 0];
-        Air = [zero3', f * X_i_l', (cv - x_ip1_r(2)) * X_i_l', 0, f, (cv - x_ip1_r(2)), alpha;
-            -f * X_i_l', zero3', (x_ip1_r(1) - cu) * X_i_l', -f, 0, (x_ip1_r(1) - cu), beta;
-            f * x_ip1_r(2) * X_i_l', -f * x_ip1_r(1) * X_i_l', (cu * x_ip1_r(2) - cv * x_ip1_r(1)) * X_i_l', f * x_ip1_r(2), -f * x_ip1_r(1), (cu * x_ip1_r(2) - cv * x_ip1_r(1)), gamma];
+        Air = [zero3', f * X_i_l', (cv - x_ip1_r(2)) * X_i_l', 0, f, (cv - x_ip1_r(2)), -B(2)+B(3) * x_ip1_r(2);
+            -f * X_i_l', zero3', (x_ip1_r(1) - cu) * X_i_l', -f, 0, (x_ip1_r(1) - cu), -B(3) * x_ip1_r(1) + B(1);
+            f * x_ip1_r(2) * X_i_l', -f * x_ip1_r(1) * X_i_l', (cu * x_ip1_r(2) - cv * x_ip1_r(1)) * X_i_l', f * x_ip1_r(2), -f * x_ip1_r(1), (cu * x_ip1_r(2) - cv * x_ip1_r(1)), -B(1) * x_ip1_r(2) - B(2) * x_ip1_r(1)];
         
         Al = [Al; Ail];
         Ar = [Ar; Air];
