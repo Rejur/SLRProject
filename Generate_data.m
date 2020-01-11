@@ -7,3 +7,5 @@ x1 = randn(2, L);
 x1 = [x1; tmp];
 x1t = H * x1;
 x2 = x1t .* 2;
+
+display(cross(x2(:,1)', H*x1(:,1)));
