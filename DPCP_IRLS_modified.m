@@ -6,6 +6,7 @@ function [f, distances, time] = DPCP_IRLS_modified(X_tilde, delta, T, epsilon_J)
     %% init parameters.
     tic;
     [D, N] = size(X_tilde);
+    display(size(X_tilde));
     Delta_J = Inf;
     k = 0;
     w = ones(N, 1);
@@ -15,7 +16,7 @@ function [f, distances, time] = DPCP_IRLS_modified(X_tilde, delta, T, epsilon_J)
 
     %% Get the f.
     while (Delta_J > epsilon_J) 
-        if (T != -1 && k > T)
+        if (T ~= -1 && k > T)
             break;
         end
         resIter = resIter + 1;
