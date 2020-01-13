@@ -1,4 +1,4 @@
-function [f, distances, time] = DPCP_IRLS_modified(X_tilde, delta, T, epsilon_J)
+function [f, distances, time] = DPCP_IRLS_modified(X_tilde, delta, T, epsilon_J, C)
     %%DPCP-IRLS's implementation
     %%Solve min_f ||X^T f||_{1,2} s.t ||f||_2 == 1 's problem.
 
@@ -23,7 +23,7 @@ function [f, distances, time] = DPCP_IRLS_modified(X_tilde, delta, T, epsilon_J)
         R_X = X_tilde * diag(w) * X_tilde';
         [U, S, V] = svd(R_X);
         % display(U);
-        f = U(:,D);
+        f = U(:,D - C + 1:D);
 
         for j = 1:N
             w(j) = 1 / max(delta, norm(f' * X_tilde(:, j)));
