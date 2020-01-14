@@ -1,14 +1,16 @@
-function [Xin] = APG(W)
+function [Xin, precision, recal] = APG(W, p)
 
 lambda = 0.0001;
 len = size(W, 1);
 Xin = cell(1, len);
 delta = 10^-5;
-
+precision = 0;
+recal = 0;
 iter = 10000;
 for k = 1:len
     tmpWi = W(k, :, :);
     Nc = size(W, 3);
+    fenjie = Nc * p;
     Wi = zeros(8, Nc);
     Wi(:,:) = tmpWi(1, :, :);
     Akp1 = zeros(8, Nc); Ak = zeros(8, Nc); Apre = zeros(8, Nc);
@@ -55,20 +57,26 @@ for k = 1:len
     %%
     A = Ak;
     E = Ek;
-    disp(A);
-    disp(Wi);
-    disp(E);
+    %disp(A);
     %disp(Wi);
+    %disp(E);
+    %disp(Wi);
+    TP = 0;
     for i = 1:Nc
         if norm(Wi(:,i), 1) <= min(0.5, norm(E(:, i), 1) * 1.1)
+            if j < fenjie
+                TP = TP + 1;
+            end
            tmpXin = [tmpXin, Wi(:, i)]; 
         end
     end
-
-    display(size(tmpXin));
+    precision = precision + (TP) / size(tmpXin, 2);
+    recal = recal + (TP) / (fenjie - 1);
+    %display(size(tmpXin));
     Xin{i} = tmpXin;
 end
-
+precision = precision / len;
+recal = recal / len;
 %display(Xin);
 
 end

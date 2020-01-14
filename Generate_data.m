@@ -9,7 +9,7 @@ function [W] = Generate_data(Nm, Nc, P)
     W = zeros(Nm, 8, Nc);
     %display(Nc * P);
     for j = 1:Nm
-        M = [1 0 0 0; 0 1 0 0; 0 0 1 0; 0 0 0 1];
+        M = [1 0 0 j; 0 1 0 j; 0 0 1 j; 0 0 0 1];
         Wt = [];
         for i = 1:Nc
             if i < Nc * P

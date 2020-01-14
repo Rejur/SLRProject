@@ -1,15 +1,19 @@
-function [Xin] = DPCP(W)
+function [Xin, precision, recal] = DPCP(W, p)
 %% init parameters.
 %display(size(W));
+
 len = size(W, 1);
 delta = 10^(-9);
 T = 1000;
 epsilon_J = 10^(-6);
 Xin = cell(1, len);
 yf = [0; 0; 0; 0; 0; 1; 0; -1; 0];
+precision = 0;
+recal = 0;
 for i = 1:len
     tmpWi = W(i, :, :);
     Nc = size(W, 3);
+    fenjie = Nc * p;
     Wi = zeros(8, Nc);
     Wi(:,:) = tmpWi(1, :, :);
     
@@ -21,8 +25,8 @@ for i = 1:len
     end
     %display(tSum);
     %% plot
-    figure; subplot(1,1,1); stem(abs(normc(f)'*X));
-title('fundenmental-subspace distance for each embedding to Span(h)^\perp');
+    %figure; subplot(1,1,1); stem(abs(normc(f)'*X));
+%title('fundenmental-subspace distance for each embedding to Span(h)^\perp');
     %%
     tmpXin = [];
    %display((distance));
@@ -46,15 +50,23 @@ title('fundenmental-subspace distance for each embedding to Span(h)^\perp');
     % display(distance(1));
     %display(tSum / (2 * Nc));
     lq = max(((tSum / (2 * Nc)) * 0.3), 5);
-    display(lq);
+    %display(lq);
+    TP = 0;
     for j = 1:Nc
         if qwe(2 * (j - 1) + 1) <= lq && qwe(2 * (j - 1) + 2) <= lq
+            if j < fenjie
+                TP = TP + 1;
+            end
             tmpXin = [tmpXin , Wi(:,j)];
         end
     end
+    precision = precision + (TP) / size(tmpXin, 2);
+    recal = recal + (TP) / (fenjie - 1);
     %display(size(tmpXin));
     Xin{i} = tmpXin;
 end
-    display(Xin);
+precision = precision / len;
+recal = recal / len;
+    %display(Xin);
 
 end
